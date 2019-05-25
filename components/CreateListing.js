@@ -1,20 +1,36 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput} from "react-native";
+import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 
 
 export default class CreateListingScreen extends React.Component {
 
+    constructor(props)
+    {
+        super(props);
+        this.state = {
+            text: 'test',
+        }
+    }
 
     render() {
         return (
           <View style ={styles.background}>
-              <Header />
-              <Inputs />
+              <Header/>
+              <Inputs/>
+
+              <TouchableWithoutFeedback onPress={}>
+                <View style={styles.submit}/>
+              </TouchableWithoutFeedback>
           </View>
         );
     }
+
+    submitListing() {
+
+    }
 }
+
 
 class Header extends React.Component {
     render() {
@@ -28,24 +44,18 @@ class Header extends React.Component {
 
 class Inputs extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            title: "Title",
-            description: "Description",
-            price: "Price"
-        }
-    }
-
     render() {
         return (
             <View style={styles.inputContainer}>
-                <ListingInput defaultName="Title"/>
+                <ListingInput defaultValue={"Title"}/>
+                <ListingInput defaultValue={"Description"}/>
+                <ListingInput defaultValue={"Price"}/>
             </View>
+
+
         )
     }
 }
-
 /*
 * Takes a deafult name.
 * */
@@ -54,15 +64,14 @@ class ListingInput extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            defaultValue: props.defaultName,
-            changedValue: ""
+            inputValue: null
         }
     }
 
     render() {
         return (
             <View>
-                <TextInput style={styles.inputHeader} onFocus={() => this.setState({changedValue: ""})} onChangeText={(text)=> this.setState({changedValue: text})} value={this.state.changedValue==null ? this.state.defaultValue : this.state.changedValue} />
+                <TextInput style={styles.inputHeader} onFocus={() => this.setState({inputValue: ""})} onChangeText={(text)=> this.setState({inputValue: text})} value={this.state.inputValue==null ? this.props.defaultValue : this.state.inputValue} />
                 <View style={styles.lineContainer}>
                     <View style={styles.line} />
                 </View>
@@ -73,6 +82,13 @@ class ListingInput extends React.Component {
 
 
 const styles = StyleSheet.create({
+    submit: {
+        width: wp(100),
+        height: hp(7),
+        position: "absolute",
+        bottom: 0,
+        backgroundColor: "#2AAF14"
+    },
     inputHeader: {
         color: "#F2545B",
         fontSize: wp(5),

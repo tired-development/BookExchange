@@ -16,12 +16,10 @@ class LoginScreen extends React.Component{
   render() {
     const navigation = this.props.navigation;
     return (
-        <TouchableWithoutFeedback>
           <View style={styles.background}>
             <Header/>
             <SignIn navigation={navigation}/>
           </View>
-        </TouchableWithoutFeedback>
     )
   }
 }

@@ -1,39 +1,7 @@
 {
+  "name": "BookExchange",
+  "displayName": "BookExchange",
   "expo": {
-    "name": "BookExchange",
-    "slug": "BookExchange",
-    "privacy": "public",
-    "sdkVersion": "32.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "ios": {
-    "supportsTablet": true,
-    "bundleIdentifier": "me.timlampen.bookexchange",
-    "config": {
-      "googleSignIn": {
-        "reservedClientId": "com.googleusercontent.apps.942772568512-v5b1fcobjfv35olqdig88qg1tk8gh5dv"
-      }
-    }
-  },
-  "android:": {
-    "package": "me.timlampen.bookexchange",
-    "googleServicesFile": "./android/app/google-services.json"
+    "sdkVersion": "32.0.0"
   }
 }
