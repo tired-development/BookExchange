@@ -18,6 +18,7 @@ export default class CreateListingScreen extends React.Component {
           <View style ={styles.background}>
               <Header/>
               <Inputs/>
+              <ImageUpload/>
 
               <TouchableWithoutFeedback>
                 <View style={styles.submit}/>
@@ -51,13 +52,11 @@ class Inputs extends React.Component {
                 <ListingInput defaultValue={"Description"}/>
                 <ListingInput defaultValue={"Price"}/>
             </View>
-
-
         )
     }
 }
 /*
-* Takes a deafult name.
+* @param defaultName - the name that should be .
 * */
 class ListingInput extends React.Component {
 
@@ -80,8 +79,37 @@ class ListingInput extends React.Component {
     }
 }
 
+class ImageUpload extends React.Component {
+
+    render() {
+        return(
+            <View style={styles.imageUploadContainer}>
+                <View style={styles.imageUpload}>
+                    <Text style={styles.imageUploadText}>Upload Image</Text>
+                </View>
+            </View>
+        )
+    }
+}
+
 
 const styles = StyleSheet.create({
+    imageUploadText: {
+        color: '#F2545B',
+        fontSize: wp(8),
+        fontWeight: 'bold'
+    },
+    imageUploadContainer: {
+        alignItems: "center",
+    },
+    imageUpload: {
+        width: wp(80),
+        height: hp(30),
+        backgroundColor: "#595959",
+        borderRadius: wp(5),
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     submit: {
         width: wp(100),
         height: hp(7),

@@ -1,0 +1,9 @@
+{
+  "expoServerNgrokUrl": "https://yr-chy.timlampen.bookexchange.exp.direct",
+  "packagerNgrokUrl": "https://packager.yr-chy.timlampen.bookexchange.exp.direct",
+  "ngrokPid": 10980,
+  "packagerPort": null,
+  "packagerPid": null,
+  "devToolsPort": 19002,
+  "expoServerPort": 19000
+}
