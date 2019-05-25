@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>942772568512-v5b1fcobjfv35olqdig88qg1tk8gh5dv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.942772568512-v5b1fcobjfv35olqdig88qg1tk8gh5dv</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>942772568512-gf0ric6sj2sgt0q2iq63b55l0avsdnqn.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAHskp84B3rGXx1KEqB8ZJfO8Pp-RoChho</string>
+	<key>GCM_SENDER_ID</key>
+	<string>942772568512</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>me.timlampen.bookexchange</string>
+	<key>PROJECT_ID</key>
+	<string>bookexchange-f1b95</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bookexchange-f1b95.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:942772568512:ios:c28ea37832a62f8f</string>
+	<key>DATABASE_URL</key>
+	<string>https://bookexchange-f1b95.firebaseio.com</string>
+</dict>
+</plist>

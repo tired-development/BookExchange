@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "942772568512",
+    "firebase_url": "https://bookexchange-f1b95.firebaseio.com",
+    "project_id": "bookexchange-f1b95",
+    "storage_bucket": "bookexchange-f1b95.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942772568512:android:c28ea37832a62f8f",
+        "android_client_info": {
+          "package_name": "me.timlampen.bookexchange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942772568512-i97mctv5gp2nk97sbdmp85b2bj8sn8me.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsAmzIlPbZuA3ffiLtSo6GjPq9yUpw2DI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942772568512-i97mctv5gp2nk97sbdmp85b2bj8sn8me.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "942772568512-v5b1fcobjfv35olqdig88qg1tk8gh5dv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.timlampen.bookexchange"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

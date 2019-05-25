@@ -21,9 +21,19 @@
     },
     "assetBundlePatterns": [
       "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
+    ]
+  },
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "me.timlampen.bookexchange",
+    "config": {
+      "googleSignIn": {
+        "reservedClientId": "com.googleusercontent.apps.942772568512-v5b1fcobjfv35olqdig88qg1tk8gh5dv"
+      }
     }
+  },
+  "android:": {
+    "package": "me.timlampen.bookexchange",
+    "googleServicesFile": "./android/app/google-services.json"
   }
 }
