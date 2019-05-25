@@ -19,7 +19,7 @@ export default class CreateListingScreen extends React.Component {
               <Header/>
               <Inputs/>
 
-              <TouchableWithoutFeedback onPress={}>
+              <TouchableWithoutFeedback>
                 <View style={styles.submit}/>
               </TouchableWithoutFeedback>
           </View>

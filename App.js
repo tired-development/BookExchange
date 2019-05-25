@@ -47,14 +47,14 @@ class SignIn extends React.Component {
           </View>
           <View style={styles.signInOptions}>
             <TouchableWithoutFeedback onPress={() =>  navigation.navigate("CreateListing")}>
-              <Image style={styles.googleSignIn} source={require("C:\\Users\\lampe\\IdeaProjects\\BookExchange\\assets\\login-google.png")} />
+              <Image style={styles.googleSignIn} source={{uri: "https://firebasestorage.googleapis.com/v0/b/bookexchange-f1b95.appspot.com/o/assets%2Flogin-google.png?alt=media&token=73ce6a42-158c-49e6-8a51-5fe71b0a6bf5"}} />
             </TouchableWithoutFeedback>
           </View>
         </View>
     );
   }
 }
-//
+////
 
 
 const AppNavigator = createStackNavigator(
