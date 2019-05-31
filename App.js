@@ -3,6 +3,7 @@ import CreateListingScreen from './components/CreateListing'
 import {StyleSheet, TouchableWithoutFeedback, Text, Image, View} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {createAppContainer, createStackNavigator} from "react-navigation";
+import * as firebase from 'firebase'
 
 export default class App extends React.Component {
   render() {
@@ -69,6 +70,16 @@ const AppNavigator = createStackNavigator(
       }
     }
 );
+
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDPe9Nckm0M2LamEnzv2in2SGK25drJy0g',
+  authDomain: "https://bookexchange-f1b95.firebaseio.com",
+  storageBucket: "bookexchange-f1b95.appspot.com"
+};
+firebase.initializeApp(firebaseConfig);
+
+
 
 const AppContainer = createAppContainer(AppNavigator);
 

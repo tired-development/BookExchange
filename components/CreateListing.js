@@ -1,7 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback} from "react-native";
+import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Alert} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-
+import { ImagePicker } from 'expo';
+import * as firebase from 'firebase';
+import uuidv4 from 'uuid';
 
 export default class CreateListingScreen extends React.Component {
 
@@ -20,14 +22,16 @@ export default class CreateListingScreen extends React.Component {
               <Inputs/>
               <ImageUpload/>
 
-              <TouchableWithoutFeedback>
-                <View style={styles.submit}/>
+              <TouchableWithoutFeedback onPress={ () => this.submitListing()}>
+                  <View style={styles.submitBtn}>
+                      <Text style={styles.submitText}>Submit</Text>
+                  </View>
               </TouchableWithoutFeedback>
           </View>
         );
     }
 
-    submitListing() {
+    submitListing(){
 
     }
 }
@@ -48,9 +52,9 @@ class Inputs extends React.Component {
     render() {
         return (
             <View style={styles.inputContainer}>
-                <ListingInput defaultValue={"Title"}/>
-                <ListingInput defaultValue={"Description"}/>
-                <ListingInput defaultValue={"Price"}/>
+                <ListingInput defaultValue="Title"/>
+                <ListingInput defaultValue="Description"/>
+                <ListingInput defaultValue="Price"/>
             </View>
         )
     }
@@ -70,32 +74,88 @@ class ListingInput extends React.Component {
     render() {
         return (
             <View>
-                <TextInput style={styles.inputHeader} onFocus={() => this.setState({inputValue: ""})} onChangeText={(text)=> this.setState({inputValue: text})} value={this.state.inputValue==null ? this.props.defaultValue : this.state.inputValue} />
+                <TextInput style={styles.inputHeader} onEndEditing={() => this.returnToDefault()} onFocus={() => this.setState({inputValue: ""})} onChangeText={(text)=> this.setState({inputValue: text})} value={this.state.inputValue==null ? this.props.defaultValue : this.state.inputValue} />
                 <View style={styles.lineContainer}>
                     <View style={styles.line} />
                 </View>
             </View>
         )
     }
+
+    returnToDefault(){
+        if(this.state.inputValue==null || this.state.inputValue===""){
+            this.setState({inputValue: this.props.defaultValue});
+        }
+    }
 }
 
 class ImageUpload extends React.Component {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            uploaded: false,
+        }
+    }
+
     render() {
+        let imageUploadStyle = this.state.uploaded ? <Text style={styles.imageUploadedText}>Image Uploaded</Text> : <Text style={styles.imageUploadText}>Upload Image</Text>;
         return(
-            <View style={styles.imageUploadContainer}>
-                <View style={styles.imageUpload}>
-                    <Text style={styles.imageUploadText}>Upload Image</Text>
+            <TouchableWithoutFeedback onPress={() => this.chooseImage()}>
+                <View style={styles.imageUploadContainer}>
+                    <View style={styles.imageUpload}>
+                        {imageUploadStyle}
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         )
     }
+
+    async chooseImage() {
+        let result = await ImagePicker.launchImageLibraryAsync();
+        if (!result.cancelled) {
+            const data = await this.uploadImageAsync(result.uri);
+            console.log(data.toString());
+        }
+    }
+
+    async uploadImageAsync(uri) {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+        const imgUUID = uuidv4();
+        const ref = firebase.storage().ref().child("images/" + imgUUID);
+        const snapshot = await ref.put(blob);
+        blob.close();
+
+        console.log(imgUUID + " / " + uri.substring(uri.lastIndexOf(".")))
+        this.setState({
+            uploaded: true
+        });
+        return [imgUUID, uri.substring(uri.lastIndexOf("."))];
+    }
 }
+
 
 
 const styles = StyleSheet.create({
     imageUploadText: {
         color: '#F2545B',
+        fontSize: wp(8),
+        fontWeight: 'bold'
+    },
+    imageUploadedText: {
+        color: '#2AAF14',
         fontSize: wp(8),
         fontWeight: 'bold'
     },
@@ -110,12 +170,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    submit: {
+    submitBtn: {
         width: wp(100),
         height: hp(7),
         position: "absolute",
         bottom: 0,
-        backgroundColor: "#2AAF14"
+        backgroundColor: "#2AAF14",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    submitText: {
+        fontSize: wp(5),
+        fontWeight: 'bold',
+        color: "#FFFFFA"
     },
     inputHeader: {
         color: "#F2545B",
