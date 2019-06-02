@@ -1,6 +1,6 @@
 {
   "urlRandomness": "jb-58m",
-  "hostType": "tunnel",
+  "hostType": "lan",
   "lanType": "ip",
   "dev": true,
   "minify": false

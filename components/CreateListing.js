@@ -7,11 +7,14 @@ import uuidv4 from 'uuid';
 
 export default class CreateListingScreen extends React.Component {
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
+
         this.state = {
-            text: 'test',
+            title: null,
+            description: null,
+            price: null,
+            imageUUID: null
         }
     }
 
@@ -20,7 +23,7 @@ export default class CreateListingScreen extends React.Component {
           <View style ={styles.background}>
               <Header/>
               <Inputs/>
-              <ImageUpload/>
+              <ImageUpload action={this.setImageUUID}/>
 
               <TouchableWithoutFeedback onPress={ () => this.submitListing()}>
                   <View style={styles.submitBtn}>
@@ -29,6 +32,23 @@ export default class CreateListingScreen extends React.Component {
               </TouchableWithoutFeedback>
           </View>
         );
+    }
+
+    setTitle(title){
+        this.setState({title: title});
+    }
+
+    setDecription(description){
+        this.setState({description: description});
+    }
+
+    setPrice(price){
+        this.setState({price: price});
+    }
+
+    setImageUUID(uuid){
+        this.setState({imageUUID: uuid});
+        console.log("test testt")
     }
 
     submitListing(){
@@ -135,13 +155,14 @@ class ImageUpload extends React.Component {
         });
         const imgUUID = uuidv4();
         const ref = firebase.storage().ref().child("images/" + imgUUID);
-        const snapshot = await ref.put(blob);
+        await ref.put(blob);
         blob.close();
 
         console.log(imgUUID + " / " + uri.substring(uri.lastIndexOf(".")))
         this.setState({
             uploaded: true
         });
+        this.props.action(imgUUID);
         return [imgUUID, uri.substring(uri.lastIndexOf("."))];
     }
 }
