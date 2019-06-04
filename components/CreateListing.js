@@ -1,10 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Alert} from "react-native";
+import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Button, ToastAndroid} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import uuidv4 from 'uuid';
+import {Input} from 'react-native-elements';
+
 
 export default class CreateListingScreen extends React.Component {
     constructor(props) {
@@ -38,10 +40,13 @@ export default class CreateListingScreen extends React.Component {
         this.setState({
            [key]: value
         });
+
+        console.log("set " + key + " to " + value);
     }
 
-    submitListing(){
-        /*if(this.state.title==null){
+    async submitListing(){
+        console.ignoredYellowBox = ['Setting a timer'];
+        if(this.state.title==null){
             console.log("This title sucks!");
             return;
         }
@@ -49,12 +54,19 @@ export default class CreateListingScreen extends React.Component {
             console.log("This desc. sucks!");
             return;
         }
-        /*if(this.state.price==null){
-            console.log("This price sucks!")
+        if(this.state.price==null){
+            console.log("This price sucks!");
             return;
-        }*///
-        firebase.firestore().collection('posts').add({
-            title: "tesst"
+        }
+//
+        const postUUID = uuidv4();
+        await firebase.database().ref("posts/"+ postUUID).set({
+            title: this.state.title,
+            description: this.state.description,
+            price: this.state.price,
+            imageUUID: this.state.imageUUID
+        }).then(() => {
+            ToastAndroid.show("Successfully uploaded post!", ToastAndroid.SHORT);
         });
     }
 }
@@ -74,51 +86,60 @@ class Inputs extends React.Component {
 
     constructor(props){
         super(props);
+
+        this.state = {
+            titleError: " ",
+            descriptionError: " ",
+            priceError: " "
+        }
     }
 
     render() {
         return (
             <View style={styles.inputContainer}>
-                <ListingInput defaultValue="Title" callback={this.updateParentState.bind(this)}/>
-                <ListingInput defaultValue="Description" callback={this.updateParentState.bind(this)}/>
-                <ListingInput defaultValue="Price" callback={this.updateParentState.bind(this)}/>
+                <Input leftIcon={{type: 'entypo', name: 'text'}} style={styles.inputStyling} placeholder="Title" errorStyle={{color: 'red'}} errorMessage={this.state.titleError} onChangeText={(text) => this.validateInput("title", text)}/>
+                <Input style={styles.inputStyling} placeholder="Description" errorStyle={{color: 'red'}} errorMessage={this.state.descriptionError} onChangeText={(text) => this.validateInput("description", text)}/>
+                <Input style={styles.inputStyling} placeholder="Price" errorStyle={{color: 'red'}} errorMessage={this.state.priceError} onChangeText={(text) => this.validateInput("price", text)}/>
+
             </View>
         )
     }
 
-    updateParentState(key, value){
-        this.props.callback(key, value);
-    }
-}
-/*
-* @param defaultName - the name that should be .
-* */
-class ListingInput extends React.Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-            inputValue: null
+    validateInput(type, value){
+        switch(type){
+            case "title": {
+                if(value.length < 10) {
+                    this.setState({titleError: "You need " + (10 - value.length) + " more characters."});
+                    break;
+                }
+                if(this.state.titleError.length > 0)
+                    this.setState({titleError: " "});
+                this.props.callback(type, value);
+                break;
+            }
+            case "description": {
+                if(value.length < 50) {
+                    this.setState({descriptionError: "You need " + (50 - value.length) + " more characters."});
+                    break;
+                }
+                if(this.state.descriptionError.length > 0)
+                    this.setState({descriptionError: " "});
+                this.props.callback(type, value);
+                break;
+            }
+            case "price": {
+                if(isNaN(value)){
+                    this.setState({priceError: "Your input is not a number"});
+                    break;
+                }
+                if(this.state.priceError.length > 0)
+                    this.setState({priceError: " "});
+                this.props.callback(type, value);
+                break;
+            }
+            default:
+                break;
         }
-    }
-
-    render() {
-        return (
-            <View>
-                <TextInput style={styles.inputHeader} onEndEditing={() => this.returnToDefault()} onFocus={() => this.setState({inputValue: ""})} onChangeText={(text)=> this.setState({inputValue: text})} value={this.state.inputValue==null ? this.props.defaultValue : this.state.inputValue} />
-                <View style={styles.lineContainer}>
-                    <View style={styles.line} />
-                </View>
-            </View>
-        )
-    }
-
-    returnToDefault(){
-        if(this.state.inputValue==null || this.state.inputValue===""){
-            this.setState({inputValue: this.props.defaultValue});
-        }
-        else
-            this.props.callback(this.props.defaultValue.toLowerCase(), this.state.inputValue);
     }
 }
 
@@ -175,12 +196,11 @@ class ImageUpload extends React.Component {
         await ref.put(blob);
         blob.close();
 
-        console.log(imgUUID + " / " + uri.substring(uri.lastIndexOf(".")))
         this.setState({
             uploaded: true,
             imgText: "Image Uploaded"
         });
-        this.props.callback(imgUUID);
+        this.props.callback("imageUUID", imgUUID);
         return [imgUUID, uri.substring(uri.lastIndexOf("."))];
     }
 }
@@ -188,6 +208,9 @@ class ImageUpload extends React.Component {
 
 
 const styles = StyleSheet.create({
+    inputStyling: {
+      color: '#F2545B'
+    },
     imageUploadText: {
         color: '#F2545B',
         fontSize: wp(8),
@@ -229,25 +252,13 @@ const styles = StyleSheet.create({
         marginLeft: wp(10)
     },
     inputContainer: {
-        marginTop: hp(10),
-
+        marginTop: hp(7),
     },
     background: {
         flex: 1,
         width: wp(100),
         height: hp(100),
         backgroundColor: '#333138',
-    },
-    lineContainer: {
-        alignItems: 'center',
-        marginBottom: hp(5)
-    },
-    line: {
-        height: 1,
-        width: wp(80),
-        borderRadius: 1,
-        borderColor: "#F2545B",
-        backgroundColor: "#F2545B",
     },
     headerContainer: {
         backgroundColor: '#E94F37',
