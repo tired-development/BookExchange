@@ -5,7 +5,8 @@ import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import uuidv4 from 'uuid';
-import {Input} from 'react-native-elements';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Fumi } from 'react-native-textinput-effects';
 
 
 export default class CreateListingScreen extends React.Component {
@@ -97,9 +98,39 @@ class Inputs extends React.Component {
     render() {
         return (
             <View style={styles.inputContainer}>
-                <Input leftIcon={{type: 'entypo', name: 'text'}} style={styles.inputStyling} placeholder="Title" errorStyle={{color: 'red'}} errorMessage={this.state.titleError} onChangeText={(text) => this.validateInput("title", text)}/>
-                <Input style={styles.inputStyling} placeholder="Description" errorStyle={{color: 'red'}} errorMessage={this.state.descriptionError} onChangeText={(text) => this.validateInput("description", text)}/>
-                <Input style={styles.inputStyling} placeholder="Price" errorStyle={{color: 'red'}} errorMessage={this.state.priceError} onChangeText={(text) => this.validateInput("price", text)}/>
+                <Fumi label={'Title'}
+                    style={{backgroundColor: '#333138'}}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'pencil'}
+                    inputPadding={16}
+                    labelHeight={24}
+                    borderHeight={2}
+                    width={wp(60)}
+                    labelStyle={{color: '#F2545B'}}
+                    iconColor={'#F2545B'}
+                />
+                <Fumi label={'Description'}
+                      style={{backgroundColor: '#333138'}}
+                      iconClass={FontAwesomeIcon}
+                      iconName={'align-center'}
+                      inputPadding={16}
+                      labelHeight={24}
+                      borderHeight={2}
+                      width={wp(60)}
+                      labelStyle={{color: '#F2545B'}}
+                      iconColor={'#F2545B'}
+                />
+                <Fumi label={'Price'}
+                      style={{backgroundColor: '#333138'}}
+                      iconClass={FontAwesomeIcon}
+                      iconName={'dollar'}
+                      inputPadding={16}
+                      labelHeight={24}
+                      borderHeight={2}
+                      width={wp(60)}
+                      labelStyle={{color: '#F2545B'}}
+                      iconColor={'#F2545B'}
+                />
 
             </View>
         )
@@ -208,9 +239,6 @@ class ImageUpload extends React.Component {
 
 
 const styles = StyleSheet.create({
-    inputStyling: {
-      color: '#F2545B'
-    },
     imageUploadText: {
         color: '#F2545B',
         fontSize: wp(8),
@@ -231,6 +259,7 @@ const styles = StyleSheet.create({
         borderRadius: wp(5),
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: hp(4)
     },
     submitBtn: {
         width: wp(100),
@@ -252,7 +281,8 @@ const styles = StyleSheet.create({
         marginLeft: wp(10)
     },
     inputContainer: {
-        marginTop: hp(7),
+        marginTop: hp(5),
+        marginLeft: wp(5)
     },
     background: {
         flex: 1,
