@@ -54,14 +54,13 @@ const signInStyles = StyleSheet.create({
         borderRadius: 8,
         alignItems: "center",
         backgroundColor: "#E94F37",
-        marginLeft: widthPercentageToDP(30),
+        marginLeft: widthPercentageToDP(27),
         marginTop: heightPercentageToDP(50),
-        width: widthPercentageToDP(40)
+        width: widthPercentageToDP(50)
     },
     signInButton: {
         fontSize: widthPercentageToDP(5),
         fontWeight: "bold",
-        width: widthPercentageToDP(50),
         color: "#FFFFFA"
     }
 });
