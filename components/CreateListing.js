@@ -108,6 +108,7 @@ class Inputs extends React.Component {
                     width={wp(60)}
                     labelStyle={{color: '#F2545B'}}
                     iconColor={'#F2545B'}
+                    onChangeText={(text) => this.props.callback('title', text)}
                 />
                 <Fumi label={'Description'}
                       style={{backgroundColor: '#333138'}}
@@ -119,6 +120,7 @@ class Inputs extends React.Component {
                       width={wp(60)}
                       labelStyle={{color: '#F2545B'}}
                       iconColor={'#F2545B'}
+                      onChangeText={(text) => this.props.callback('description', text)}
                 />
                 <Fumi label={'Price'}
                       style={{backgroundColor: '#333138'}}
@@ -130,6 +132,7 @@ class Inputs extends React.Component {
                       width={wp(60)}
                       labelStyle={{color: '#F2545B'}}
                       iconColor={'#F2545B'}
+                      onChangeText={(text) => validateT('price', text)}
                 />
 
             </View>
