@@ -39,7 +39,7 @@ class SignIn extends React.Component {
                 style={signInStyles.signInButton}
                 containerStyle={signInStyles.signInContainer}
                 // TODO change CreateListing to Login, waiting for auth implementation
-                onPress={() => this.props.navigation.navigate("CreateListing")}
+                onPress={() => this.props.navigation.navigate("Login")}
             >
                 Sign in
             </Button>

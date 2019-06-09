@@ -1,17 +1,76 @@
-import React from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Alert} from "react-native";
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, AsyncStorage} from "react-native";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import { SocialIcon } from "react-native-elements";
 import { mainStyles } from './styles/MainStyles';
+import firebase from 'firebase'
+import { getGithubTokenAsync } from './TokenService'
+
+
+const GITHUB_STORAGE_KEY = "password123";
+
 
 export default class LoginScreen extends React.Component
 {
+    state = { isSignedIn: false };
+
+    componentDidMount() {
+        this.setupFirebaseAsync();
+    }
+
+    setupFirebaseAsync = async () => {
+        firebase.auth().onAuthStateChanged(async auth => {
+            const isSignedIn = !!auth;
+            this.setState({ isSignedIn });
+            if (!isSignedIn)
+            {
+                console.log("lol");
+            }
+        })
+    };
+
     render() {
+        if (this.state.isSignedIn)
+        {
+            const user = firebase.auth().currentUser || {};
+
+            return (
+                <View>
+                    <Text>{user.displayName}</Text>
+                </View>
+            )
+        }
+
         return (
             <View style={mainStyles.background}>
                 <LoginOptions/>
             </View>
         );
+    }
+}
+
+async function signInAsync(token)
+{
+    try {
+        if (!token)
+        {
+            const token = await getGithubTokenAsync();
+            if (token)
+            {
+                await AsyncStorage.setItem(GITHUB_STORAGE_KEY, token);
+                return signInAsync(token);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        const credential = firebase.auth.GithubAuthProvider.credential(token);
+        return firebase.auth().signInAndRetrieveDataWithCredential(credential);
+    }
+    catch ({ message }) {
+        alert(message);
     }
 }
 
@@ -26,7 +85,7 @@ class LoginOptions extends React.Component
                         button
                         fontWeight={"bold"}
                         fontStyle={optionStyles.optionButtonFont}
-                        style={[optionStyles.optionButton, {marginTop:heightPercentageToDP(24)}]}
+                        style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(24)}]}
                         type={"twitter"}
                     />
                 </TouchableWithoutFeedback>
@@ -37,7 +96,7 @@ class LoginOptions extends React.Component
                         button
                         fontWeight={"bold"}
                         fontStyle={optionStyles.optionButtonFont}
-                        style={[optionStyles.optionButton, {marginTop:heightPercentageToDP(7)}]}
+                        style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(7)}]}
                         type={"facebook"}
                     />
                 </TouchableWithoutFeedback>
@@ -48,7 +107,7 @@ class LoginOptions extends React.Component
                         button
                         fontWeight={"bold"}
                         fontStyle={optionStyles.optionButtonFont}
-                        style={[optionStyles.optionButton, {marginTop:heightPercentageToDP(7)}]}
+                        style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(7)}]}
                         type={"google-plus-official"}
                     />
                 </TouchableWithoutFeedback>
@@ -57,6 +116,9 @@ class LoginOptions extends React.Component
                     <SocialIcon
                         title={"Github"}
                         button
+                        onPress={() => {
+                            signInAsync()
+                        }}
                         fontWeight={"bold"}
                         fontStyle={optionStyles.optionButtonFont}
                         style={[optionStyles.optionButton, {marginTop:heightPercentageToDP(7)}]}
@@ -67,7 +129,27 @@ class LoginOptions extends React.Component
             </View>
         );
     }
+    //
+    // componentDidMount() {
+    //
+    //     const manager = new OAuthManager('test');
+    //     manager.configure({
+    //         google: {
+    //             callback_url: `https://bookexchange-f1b95.firebaseapp.com/__/auth/handler`,
+    //             client_id: '942772568512-i97mctv5gp2nk97sbdmp85b2bj8sn8me.apps.googleusercontent.com',
+    //             client_secret: 'MshjQUHwYx2wWHVEcYreZL4F'
+    //         }
+    //     })
+    //         .then(data => console.log(data))
+    //         .catch(error => console.log(error));
+    //
+    //     manager.authorize('google', {scopes: 'profile email'})
+    //         .then(response => console.log('Your users ID'))
+    //         .catch(error => console.log("ERROR"));
+    // }
 }
+
+
 
 const optionStyles = StyleSheet.create({
 
