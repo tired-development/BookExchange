@@ -3,12 +3,9 @@ import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, AsyncStorag
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import { SocialIcon } from "react-native-elements/src/index";
 import { mainStyles } from '../styles/MainStyles';
-import firebase from 'firebase/index'
-import { getGithubTokenAsync } from './TokenService'
-import { authorize } from "react-native-app-auth/index"
-
-
-const GITHUB_STORAGE_KEY = "password123";
+import firebase from 'firebase'
+import { getTokenAsync } from "./providers/AuthProvider";
+import Providers from "./providers/AuthProviders";
 
 
 export default class LoginScreen extends React.Component
@@ -50,16 +47,16 @@ export default class LoginScreen extends React.Component
     }
 }
 
-async function signInAsync(token)
+async function signInAsync(provider, token)
 {
     try {
         if (!token)
         {
-            const token = await getGithubTokenAsync();
+            const token = await getTokenAsync(provider);
             if (token)
             {
-                await AsyncStorage.setItem(GITHUB_STORAGE_KEY, token);
-                return signInAsync(token);
+                await AsyncStorage.setItem(provider.storageKey, token);
+                return signInAsync(provider, token);
             }
             else
             {
@@ -67,8 +64,8 @@ async function signInAsync(token)
             }
         }
 
-        const credential = firebase.auth.GithubAuthProvider.credential(token);
-        return firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        const credential = provider.firebaseAuth.credential(token);
+        return firebase.auth().signInWithCredential(credential);
     }
     catch ({ message }) {
         alert(message);
@@ -118,7 +115,7 @@ class LoginOptions extends React.Component
                         title={"Github"}
                         button
                         onPress={() => {
-                            signInAsync()
+                            signInAsync(Providers.github)
                         }}
                         fontWeight={"bold"}
                         fontStyle={optionStyles.optionButtonFont}
