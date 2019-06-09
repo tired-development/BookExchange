@@ -4,7 +4,7 @@ const REDIRECT_URL = AuthSession.getRedirectUrl();
 
 const github = {
     id: '9dfa8b412813520848a7',
-    secret: '689616074b3c4a84618214a0177af71357972ae4'
+    secret: '475bd0aab4aa0c7c677da96dd28cf7ad74abb421'
 };
 
 const githubFields = ['user', 'public_repo'];

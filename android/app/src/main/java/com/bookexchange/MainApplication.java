@@ -3,6 +3,8 @@ package com.bookexchange;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnappauth.RNAppAuthPackage;
+import io.fullstack.oauth.OAuthManagerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -10,6 +12,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import io.fullstack.oauth.OAuthManagerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,9 +29,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAppAuthPackage(),
+            new OAuthManagerPackage(),
             new RNFetchBlobPackage(),
             new MapsPackage(),
-            new ImagePickerPackage()
+            new ImagePickerPackage(),
+            new OAuthManagerPackage()
       );
     }
 

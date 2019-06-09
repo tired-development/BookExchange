@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, AsyncStorage} from "react-native";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
-import { SocialIcon } from "react-native-elements";
-import { mainStyles } from './styles/MainStyles';
-import firebase from 'firebase'
+import { SocialIcon } from "react-native-elements/src/index";
+import { mainStyles } from '../styles/MainStyles';
+import firebase from 'firebase/index'
 import { getGithubTokenAsync } from './TokenService'
+import { authorize } from "react-native-app-auth/index"
 
 
 const GITHUB_STORAGE_KEY = "password123";

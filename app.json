@@ -2,6 +2,9 @@
   "name": "BookExchange",
   "displayName": "BookExchange",
   "expo": {
-    "sdkVersion": "32.0.0"
+    "name": "BookExchange",
+    "version": "1.0.0",
+    "sdkVersion": "32.0.0",
+    "slug": "book-exchange"
   }
 }

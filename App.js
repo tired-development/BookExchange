@@ -5,7 +5,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import {createAppContainer, createStackNavigator} from "react-navigation";
 import * as firebase from 'firebase'
 import HomeScreen from "./components/HomeScreen";
-import LoginScreen from "./components/LoginScreen";
+import LoginScreen from "./components/auth/LoginScreen";
 
 export default class App extends React.Component {
   render() {
