@@ -1,10 +1,13 @@
 import React from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, Text, Image, View, Modal} from 'react-native';
+import {StyleSheet, ScrollView, TouchableOpacity, TouchableWithoutFeedback, TouchableHighlight, Text, Image, View, Modal, ToastAndroid} from 'react-native';
 import {mainStyles} from './styles/MainStyles.js'
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import { SocialIcon } from "react-native-elements/src/index";
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Sae, Isao} from 'react-native-textinput-effects';
+import deepDiffer from 'react-native/lib/deepDiffer';
+import * as firebase from 'firebase';
+
 
 
 export default class HomeScreen extends React.Component {
@@ -31,10 +34,6 @@ class Header extends React.Component {
 
 class SignIn extends React.Component {
 
-    componentWillMount() {
-        console.log("testsest")
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -44,7 +43,20 @@ class SignIn extends React.Component {
             modalForgotPasswordVisible: false,
             modalPhoneError: '',
             modalEmailError: '',
-            modalPasswordError: ''
+            modalPasswordError: '',
+
+            signUpFirstName: '',
+            signUpLastName: '',
+            signUpPhone: '',
+            signUpEmail: '',
+            signUpPassword: '',
+            signUpConfirmPassword: '',
+
+            resetPasswordEmail: '',
+            resetPasswordEmailError: '',
+
+            signInEmail: '',
+            signInPassword: '',
         }
     }
 
@@ -70,12 +82,13 @@ class SignIn extends React.Component {
                         iconColor={'#A0A0A0'}
                         labelStyle={{color: '#A0A0A0'}}
                         secureTextEntry={true}
+                        onChangeText={(text) => this.setState({signInPassword: text})}
                     />
                     <Text style={signInStyles.errorText}>{this.state.passwordError}</Text>
 
                 </View>
                 <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity onPress={() => this.refs.signUpModal.open()}>
+                    <TouchableOpacity onPress={() => this.signIn()}>
                         <View style={signInStyles.signInButton}>
                             <Text style={signInStyles.signInButtonText}>Sign In</Text>
                         </View>
@@ -115,6 +128,7 @@ class SignIn extends React.Component {
                             </View>
 
                             <View style={signInStyles.signUpContainer}>
+                                <Text style={signInStyles.modalErrorText}>{this.state.resetPasswordEmailError}</Text>
                                 <Isao
                                     label={'Email Address'}
                                     activeColor={'#e94f37'}
@@ -122,7 +136,7 @@ class SignIn extends React.Component {
                                     inputPadding={16}
                                     labelHeight={24}
                                     passiveColor={'#A0A0A0'}
-                                    onChangeText={(text) => this.validateText("modalphone", text)}
+                                    onChangeText={(text) => this.validateText("resetpasswordemail", text)}
                                 />
                                 <TouchableOpacity onPress={() => this.resetPassword()}>
                                     <View style={signInStyles.signUpButton}>
@@ -157,6 +171,7 @@ class SignIn extends React.Component {
                                             inputPadding={16}
                                             labelHeight={24}
                                             passiveColor={'#A0A0A0'}
+                                            onChangeText={(text) => {this.setState({signUpFirstName: text})}}
                                         />
                                     </View>
                                     <View style={{width: wp(40)}}>
@@ -167,6 +182,7 @@ class SignIn extends React.Component {
                                             inputPadding={16}
                                             labelHeight={24}
                                             passiveColor={'#A0A0A0'}
+                                            onChangeText={(text) => {this.setState({signUpLastName: text})}}
                                         />
                                     </View>
                                 </View>
@@ -178,7 +194,7 @@ class SignIn extends React.Component {
                                     inputPadding={16}
                                     labelHeight={24}
                                     passiveColor={'#A0A0A0'}
-                                    onChangeText={(text) => this.validateText("modalphone", text)}
+                                    onChangeText={(text) => this.validateText("signupphone", text)}
                                 />
                                 <Text style={signInStyles.modalErrorText}>{this.state.modalEmailError}</Text>
                                 <Isao
@@ -188,7 +204,7 @@ class SignIn extends React.Component {
                                     inputPadding={16}
                                     labelHeight={24}
                                     passiveColor={'#A0A0A0'}
-                                    onChangeText={(text) => this.validateText("modalemail", text)}
+                                    onChangeText={(text) => this.validateText("signupemail", text)}
                                 />
                                 <Isao
                                     label={'Password'}
@@ -198,6 +214,7 @@ class SignIn extends React.Component {
                                     labelHeight={24}
                                     passiveColor={'#A0A0A0'}
                                     secureTextEntry={true}
+                                    onChangeText={(text) => {this.setState({signUpPassword: text})}}
                                 />
                                 <Text style={signInStyles.modalErrorText}>{this.state.modalPasswordError}</Text>
                                 <Isao
@@ -208,6 +225,7 @@ class SignIn extends React.Component {
                                     labelHeight={24}
                                     passiveColor={'#A0A0A0'}
                                     secureTextEntry={true}
+                                    onChangeText={(text) => {this.setState({signUpConfirmPassword: text})}}
                                 />
                                 <TouchableOpacity onPress={() => this.signUp()}>
                                     <View style={signInStyles.signUpButton}>
@@ -223,31 +241,122 @@ class SignIn extends React.Component {
         )
     }
 
-    resetPassword(){}
+    resetPassword(){
+        if(this.state.resetPasswordEmail===''){
+            ToastAndroid.show("This email is invalid.", ToastAndroid.SHORT);
+            return;
+        }
+        firebase.auth().sendPasswordResetEmail(this.state.resetPasswordEmail).then(() => {
+            ToastAndroid.show("A password reset email has been sent to your inbox", ToastAndroid.SHORT);
+            this.setState({
+               modalForgotPasswordVisible: false
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
-    signUp(){}
+    signUp(){
+        if(this.state.signUpFirstName===''){
+            ToastAndroid.show("Your first name is invalid.", ToastAndroid.SHORT);
+            return;
+        }
+        if(this.state.signUpLastName===''){
+            ToastAndroid.show("Your last name is invalid.", ToastAndroid.SHORT);
+            return;
+        }
+        if(this.state.signUpPhone===''){
+            ToastAndroid.show("Your phone number is invalid", ToastAndroid.SHORT);
+            return;
+        }
+        if(this.state.signUpEmail===''){
+            ToastAndroid.show("Your email is invalid", ToastAndroid.SHORT);
+            return;
+        }
+        if(this.state.signUpPassword===''){
+            ToastAndroid.show("Your password is invalid", ToastAndroid.SHORT);
+            return;
+        }
+        if(this.state.signUpConfirmPassword===''){
+            ToastAndroid.show("Your password is invalid", ToastAndroid.SHORT);
+            return;
+        }
 
-    signIn(){}
+        firebase.auth().createUserWithEmailAndPassword(this.state.signUpEmail, this.state.signUpPassword).catch(() => {
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            console.log(errorCode + ": " + errorMessage)
+        }).finally(() => {
+            let user = firebase.auth().currentUser;
+            user.sendEmailVerification().then(() =>{
+                ToastAndroid.show("You have been sent a verification email", ToastAndroid.SHORT);
+                this.setState({modalSignUpVisible: false});
+            });
+        });
+    }
+
+    signIn(){
+        if(this.state.signInEmail==='' || this.state.signInPassword===''){
+            ToastAndroid.show("Your email and password are invalid.", ToastAndroid.SHORT);
+            return;
+        }
+        firebase.auth().signInWithEmailAndPassword(this.state.signInEmail, this.state.signInPassword).then(() => {
+            //navigate to new screen
+            ToastAndroid.show("You have been signed in.", ToastAndroid.SHORT);
+        }).catch((error) => {
+            console.log(error.code);
+            switch(error.code){
+                case "auth/wrong-password": {
+                    ToastAndroid.show("That email and password combination do not match our records.", ToastAndroid.SHORT);
+                    break;
+                }
+                default:
+                    break;
+            }
+        })
+    }
 
     validateText(type, text){
         switch(type.toLowerCase()) {
             case "email": {
                 if(text.indexOf('@')==-1 || text.indexOf('.')==-1){
                     this.setState({
-                        emailError: 'The email you have entered is not valid.'
+                        emailError: 'The email you have entered is not valid.',
+                        signInEmail: ''
                     });
                     return;
                 }
                 if(this.state.emailError.length > 0)
                     this.setState({
-                        emailError: ''
+                        emailError: '',
                     });
+                this.setState({
+                    signInEmail: text
+                });
                 break;
             }
-            case "modalemail": {
+            case "resetpasswordemail": {
                 if(text.indexOf('@')==-1 || text.indexOf('.')==-1){
                     this.setState({
-                        modalEmailError: 'The email you have entered is not valid.'
+                        resetPasswordEmailError: 'The email you have entered is not valid.',
+                        resetPasswordEmail: ''
+                    });
+                    return;
+                }
+                if(this.state.resetPasswordEmailError.length > 0)
+                    this.setState({
+                        resetPasswordEmailError: ''
+                    });
+                this.setState({
+                    resetPasswordEmail: text
+                });
+                break;
+            }
+            case "signupemail": {
+                if(text.indexOf('@')==-1 || text.indexOf('.')==-1){
+                    this.setState({
+                        modalEmailError: 'The email you have entered is not valid.',
+                        signUpEmail: ''
                     });
                     return;
                 }
@@ -255,19 +364,26 @@ class SignIn extends React.Component {
                     this.setState({
                         modalEmailError: ''
                     });
+                this.setState({
+                    signUpEmail: text
+                });
                 break;
             }
-            case "modalphone": {
+            case "signupphone": {
                 if(text.isNaN || text.length < 10){
                     this.setState({
-                        modalPhoneError: 'The phone number you have entered is not valid.'
+                        modalPhoneError: 'The phone number you have entered is not valid.',
+                        signUpPhone: ''
                     });
                     return;
                 }
                 if(this.state.modalPhoneError.length > 0)
                     this.setState({
                         modalPhoneError: ''
-                    })
+                    });
+                this.setState({
+                    signUpPhone: text
+                });
                 break;
             }
         }
