@@ -1,6 +1,6 @@
 import { AuthSession } from 'expo'
 
-const REDIRECT_URL = AuthSession.getRedirectUrl();
+const REDIRECT_URL = "https://auth.expo.io/@anonymous/bookexchange-b7727e34-f30f-43f3-8947-63060ed48034";
 
 const github = {
     id: '9dfa8b412813520848a7',
@@ -17,7 +17,7 @@ function authUrlWithId(id, fields)
         `&scope=${encodeURIComponent(fields.join(' '))}`
     );
 }
-
+//
 async function createTokenWithCode(code) {
     const url =
         `https://github.com/login/oauth/access_token` +

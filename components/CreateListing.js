@@ -7,6 +7,9 @@ import 'firebase/firestore';
 import uuidv4 from 'uuid';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
+import { mainStyles } from './styles/MainStyles';
+import Modal from 'react-native-modalbox';
+
 
 
 export default class CreateListingScreen extends React.Component {
@@ -23,18 +26,35 @@ export default class CreateListingScreen extends React.Component {
 
     render() {
         return (
-          <View style ={styles.background}>
+          <View style ={mainStyles.background}>
               <Header/>
               <Inputs callback={this.updatePostState.bind(this)}/>
               <ImageUpload callback={this.updatePostState.bind(this)}/>
 
-              <TouchableWithoutFeedback onPress={ () => this.submitListing()}>
+              <TouchableWithoutFeedback onPress={ () => this.refs.confirmModal.open()}>
                   <View style={styles.submitBtn}>
                       <Text style={styles.submitText}>Submit</Text>
                   </View>
               </TouchableWithoutFeedback>
+
+              <Modal style={styles.confirmModal} position={'bottom'} ref={"confirmModal"}>
+                  <Text style={styles.confirmModalText}>Are you sure that you would like to submit this post?</Text>
+
+                  <View style={styles.modalButtonContainer}>
+                      <View style={styles.modalButtonSubmitContainer}>
+                          <View style={styles.modalButtonSubmit} />
+                      </View>
+                      <View style={styles.modalButtonBackContainer}>
+                          <View style={styles.modalButtonBack}/>
+                      </View>
+                  </View>
+              </Modal>
           </View>
         );
+    }
+
+    test(){
+        console.log("beep");
     }
 
     updatePostState(key, value){
@@ -76,8 +96,8 @@ export default class CreateListingScreen extends React.Component {
 class Header extends React.Component {
     render() {
         return (
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerTitle}>Create Listing</Text>
+            <View style={mainStyles.headerContainer}>
+                <Text style={mainStyles.headerTitle}>Create Listing</Text>
             </View>
         );
     }
@@ -108,8 +128,9 @@ class Inputs extends React.Component {
                     width={wp(60)}
                     labelStyle={{color: '#F2545B'}}
                     iconColor={'#F2545B'}
-                    onChangeText={(text) => this.props.callback('title', text)}
+                    onChangeText={(text) => this.validateInput('title', text)}
                 />
+                <Text style={styles.inputError}>{this.state.titleError}</Text>
                 <Fumi label={'Description'}
                       style={{backgroundColor: '#333138'}}
                       iconClass={FontAwesomeIcon}
@@ -120,8 +141,9 @@ class Inputs extends React.Component {
                       width={wp(60)}
                       labelStyle={{color: '#F2545B'}}
                       iconColor={'#F2545B'}
-                      onChangeText={(text) => this.props.callback('description', text)}
+                      onChangeText={(text) => this.validateInput('description', text)}
                 />
+                <Text style={styles.inputError}>{this.state.descriptionError}</Text>
                 <Fumi label={'Price'}
                       style={{backgroundColor: '#333138'}}
                       iconClass={FontAwesomeIcon}
@@ -132,8 +154,10 @@ class Inputs extends React.Component {
                       width={wp(60)}
                       labelStyle={{color: '#F2545B'}}
                       iconColor={'#F2545B'}
-                      onChangeText={(text) => validateT('price', text)}
+                      onChangeText={(text) => this.validateInput('price', text)}
                 />
+                <Text style={styles.inputError}>{this.state.priceError}</Text>
+
 
             </View>
         )
@@ -202,13 +226,29 @@ class ImageUpload extends React.Component {
 
     async chooseImage() {
         let result = await ImagePicker.launchImageLibraryAsync();
-        if (!result.cancelled) {
-            this.setState({
-               imgText: "Uploading.."
-            });
-            const data = await this.uploadImageAsync(result.uri);
-            console.log(data.toString());
+        if (result.cancelled) {
+            return;
         }
+
+        let numOfDots = 0;
+        const textRunnable = setInterval(() => {
+            if(numOfDots < 3)
+                numOfDots++;
+            else
+                numOfDots = 0;
+
+            let text = "Uploading";
+            for(let i = 0; i < numOfDots; i++){
+                text += ".";
+            }
+            this.setState({
+                imgText: text
+            });
+        }, 250);
+
+        const data = await this.uploadImageAsync(result.uri);
+        clearInterval(textRunnable);
+        console.log(data.toString());
     }
 
     async uploadImageAsync(uri) {
@@ -242,6 +282,48 @@ class ImageUpload extends React.Component {
 
 
 const styles = StyleSheet.create({
+    modalButtonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: hp(3)
+    },
+    modalButtonSubmit: {
+        justifyContent: 'flex-start' ,
+    },
+    modalButtonSubmitContainer: {
+        flex: 1,
+        backgroundColor: '#2AAF14',
+        width: wp(35),
+        height: hp(5)
+    },
+    modalButtonBack: {
+        justifyContent: 'flex-end',
+
+    },
+    modalButtonBackContainer: {
+        backgroundColor: '#F2545B',
+        width: wp(35),
+        height: hp(5)
+    },
+    confirmModal: {
+        backgroundColor: '#333138',
+        height: hp(30),
+        alignItems: 'center'
+    },
+    confirmModalText: {
+        color: '#F7F7F7',
+        marginTop: hp(3),
+        fontSize: wp(6),
+        width: wp(80),
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    inputError: {
+        color: '#F2545B',
+        fontSize: wp(3),
+        marginTop: hp(-2),
+        marginLeft: wp(15),
+    },
     imageUploadText: {
         color: '#F2545B',
         fontSize: wp(8),
@@ -286,25 +368,5 @@ const styles = StyleSheet.create({
     inputContainer: {
         marginTop: hp(5),
         marginLeft: wp(5)
-    },
-    background: {
-        flex: 1,
-        width: wp(100),
-        height: hp(100),
-        backgroundColor: '#333138',
-    },
-    headerContainer: {
-        backgroundColor: '#E94F37',
-        borderBottomLeftRadius: wp(15),
-        width: wp(100),
-        height: hp(20),
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    headerTitle: {
-        fontSize: wp(12),
-        fontWeight: "bold",
-        color: "#FFFFFA",
-        marginLeft: wp(5),
     },
 });

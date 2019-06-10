@@ -1,32 +1,30 @@
 import { StyleSheet } from 'react-native'
-import {heightPercentageToDP, hp, widthPercentageToDP, wp} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 
 export const mainStyles = StyleSheet.create({
     background: {
         flex: 1,
-        width: widthPercentageToDP(100),
-        height: heightPercentageToDP(100),
+        width: wp(100),
+        height: hp(100),
         backgroundColor: '#333138',
     },
     headerContainer: {
         backgroundColor: '#E94F37',
-        borderBottomLeftRadius: widthPercentageToDP(15),
-        width: widthPercentageToDP(100),
-        height: heightPercentageToDP(32)
+        width: wp(100),
+        height: hp(20)
     },
     headerTitle: {
-        fontSize: widthPercentageToDP(15),
-        marginTop: heightPercentageToDP(5),
+        fontSize: wp(15),
+        marginTop: hp(5),
         fontWeight: "bold",
         color: "#FFFFFA",
-        marginLeft: widthPercentageToDP(5),
     },
     headerSubTitle: {
-        fontSize: widthPercentageToDP(5),
+        fontSize: wp(5),
         fontWeight: "bold",
-        width: widthPercentageToDP(80),
-        marginTop: heightPercentageToDP(2),
-        marginLeft: widthPercentageToDP(5),
-        color: "#FFFFFA"
+        width: wp(80),
+        marginTop: hp(2),
+        marginLeft: wp(5),
+        color: "#F7F7F7"
     }
 });

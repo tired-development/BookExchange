@@ -20,6 +20,8 @@ export default class LoginScreen extends React.Component
         firebase.auth().onAuthStateChanged(async auth => {
             const isSignedIn = !!auth;
             this.setState({ isSignedIn });
+
+            console.log("bing bang boom")
             if (!isSignedIn)
             {
                 console.log("lol");
@@ -28,6 +30,9 @@ export default class LoginScreen extends React.Component
     };
 
     render() {
+
+        const { navigation } = this.props;
+
         if (this.state.isSignedIn)
         {
             const user = firebase.auth().currentUser || {};
@@ -41,7 +46,7 @@ export default class LoginScreen extends React.Component
 
         return (
             <View style={mainStyles.background}>
-                <LoginOptions/>
+                <LoginOptions navigation={navigation}/>
             </View>
         );
     }
@@ -77,7 +82,6 @@ class LoginOptions extends React.Component
     render() {
         return (
             <View>
-                <TouchableWithoutFeedback>
                     <SocialIcon
                         title={"Twitter"}
                         button
@@ -85,10 +89,9 @@ class LoginOptions extends React.Component
                         fontStyle={optionStyles.optionButtonFont}
                         style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(24)}]}
                         type={"twitter"}
+                        onPress={() =>this.props.navigation.navigate("CreateListing")}/*Just for testing now*/
                     />
-                </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback>
                     <SocialIcon
                         title={"Facebook"}
                         button
@@ -97,9 +100,7 @@ class LoginOptions extends React.Component
                         style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(7)}]}
                         type={"facebook"}
                     />
-                </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback>
                     <SocialIcon
                         title={"Google"}
                         button
@@ -108,9 +109,7 @@ class LoginOptions extends React.Component
                         style={[optionStyles.optionButton, {marginTop: heightPercentageToDP(7)}]}
                         type={"google-plus-official"}
                     />
-                </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback>
                     <SocialIcon
                         title={"Github"}
                         button
@@ -123,7 +122,6 @@ class LoginOptions extends React.Component
                         light
                         type={"github"}
                     />
-                </TouchableWithoutFeedback>
             </View>
         );
     }
