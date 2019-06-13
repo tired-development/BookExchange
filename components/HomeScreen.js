@@ -12,10 +12,11 @@ import * as firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
     render() {
+        const { navigation } = this.props;
         return (
-            <View style={[mainStyles.background, signInStyles.background]}>
+            <View style={[mainStyles.background, {alignItems: 'center'}]}>
                 <Header/>
-                <SignIn/>
+                <SignIn navigation={navigation}/>
             </View>
         )
     }
@@ -89,8 +90,8 @@ class SignIn extends React.Component {
                 </View>
                 <View style={{alignItems: 'center'}}>
                     <TouchableOpacity onPress={() => this.signIn()}>
-                        <View style={signInStyles.signInButton}>
-                            <Text style={signInStyles.signInButtonText}>Sign In</Text>
+                        <View style={[mainStyles.button, {marginTop: hp(3)}]}>
+                            <Text style={mainStyles.buttonText}>Sign In</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -118,16 +119,15 @@ class SignIn extends React.Component {
                     animationType="slide"
                     transparent={false}
                     onRequestClose={() => console.log("")}
-                    visible={this.state.modalForgotPasswordVisible}
-                    style={[mainStyles.background, signInStyles.background]}>
+                    visible={this.state.modalForgotPasswordVisible}>
                     <TouchableWithoutFeedback onPress={() => this.setState({modalForgotPasswordVisible: false})}>
-                        <View style={[mainStyles.background, signInStyles.background]}>
-                            <Text style={signInStyles.signUpTitle}>Forgot Your Password?</Text>
+                        <View style={[mainStyles.background, {alignItems: 'center'}]}>
+                            <Text style={mainStyles.headerTitle}>Forgot Your Password?</Text>
                             <View>
-                                <Text style={[signInStyles.signUpSubTitle, {width: wp(75)}]}>If you already have an account, enter your email address and we'll send a link to reset your password.</Text>
+                                <Text style={[mainStyles.headerSubTitle, {width: wp(75)}]}>If you already have an account, enter your email address and we'll send a link to reset your password.</Text>
                             </View>
 
-                            <View style={signInStyles.signUpContainer}>
+                            <View style={{width: wp(80)}}>
                                 <Text style={signInStyles.modalErrorText}>{this.state.resetPasswordEmailError}</Text>
                                 <Isao
                                     label={'Email Address'}
@@ -138,12 +138,12 @@ class SignIn extends React.Component {
                                     passiveColor={'#A0A0A0'}
                                     onChangeText={(text) => this.validateText("resetpasswordemail", text)}
                                 />
-                                <TouchableOpacity onPress={() => this.resetPassword()}>
-                                    <View style={signInStyles.signUpButton}>
-                                        <Text style={signInStyles.signInButtonText}>Submit</Text>
-                                    </View>
-                                </TouchableOpacity>
                             </View>
+                            <TouchableOpacity onPress={() => this.resetPassword()}>
+                                <View style={[mainStyles.button, {marginTop: hp(3)}]}>
+                                    <Text style={mainStyles.buttonText}>Submit</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
@@ -155,13 +155,13 @@ class SignIn extends React.Component {
                     visible={this.state.modalSignUpVisible}
                     style={[mainStyles.background, signInStyles.background]}>
                     <TouchableWithoutFeedback onPress={() => this.setState({modalSignUpVisible: false})}>
-                        <View style={[mainStyles.background, signInStyles.background]}>
-                            <Text style={signInStyles.signUpTitle}>Create Your Account</Text>
-                            <View>
-                                <Text style={[signInStyles.signUpSubTitle, {width: wp(75)}]}>Creating an account allows you to post, manage, and respond to used textbook ads.</Text>
+                        <View style={mainStyles.background}>
+                            <Text style={mainStyles.headerTitle}>Create Your Account</Text>
+                            <View style={{alignItems: 'center'}}>
+                                <Text style={mainStyles.headerSubTitle}>Creating an account allows you to post, manage, and respond to used textbook ads.</Text>
                             </View>
 
-                            <ScrollView style={signInStyles.signUpContainer}>
+                            <ScrollView style={[signInStyles.signUpContainer, {marginLeft: wp(10)}]}>
                                 <View style={{flexDirection: 'row'}}>
                                     <View style={{width: wp(40)}}>
                                         <Isao
@@ -228,8 +228,8 @@ class SignIn extends React.Component {
                                     onChangeText={(text) => {this.setState({signUpConfirmPassword: text})}}
                                 />
                                 <TouchableOpacity onPress={() => this.signUp()}>
-                                    <View style={signInStyles.signUpButton}>
-                                        <Text style={signInStyles.signInButtonText}>Sign Up</Text>
+                                    <View style={[mainStyles.button, {marginTop: hp(2)}]}>
+                                        <Text style={mainStyles.buttonText}>Sign Up</Text>
                                     </View>
                                 </TouchableOpacity>
                             </ScrollView>
@@ -292,10 +292,19 @@ class SignIn extends React.Component {
                 ToastAndroid.show("You have been sent a verification email", ToastAndroid.SHORT);
                 this.setState({modalSignUpVisible: false});
             });
+            firebase.database().ref("users/" + user.uid).set({
+               firstName: this.state.signUpFirstName,
+               lastName: this.state.signUpLastName,
+               phone: this.state.signUpPhone,
+            }).then();
         });
     }
 
     signIn(){
+
+        this.props.navigation.navigate("ViewListing");
+        return;//TODO: remove when done testing
+
         if(this.state.signInEmail==='' || this.state.signInPassword===''){
             ToastAndroid.show("Your email and password are invalid.", ToastAndroid.SHORT);
             return;
@@ -303,6 +312,7 @@ class SignIn extends React.Component {
         firebase.auth().signInWithEmailAndPassword(this.state.signInEmail, this.state.signInPassword).then(() => {
             //navigate to new screen
             ToastAndroid.show("You have been signed in.", ToastAndroid.SHORT);
+            this.props.navigation.navigate("CreateListing");
         }).catch((error) => {
             console.log(error.code);
             switch(error.code){
@@ -397,18 +407,6 @@ const signInStyles = StyleSheet.create({
         marginLeft: wp(4),
         marginBottom: hp(-2)
     },
-    signUpTitle: {
-        fontSize: wp(11),
-        color: '#FFFFFA',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginTop: hp(7)
-    },
-    signUpSubTitle: {
-        fontSize: wp(4),
-        color: '#FFFFFA',
-        textAlign: 'center'
-    },
     errorText: {
         fontSize: wp(3),
         color: '#e94f37'
@@ -447,15 +445,6 @@ const signInStyles = StyleSheet.create({
         marginTop: hp(3),
         backgroundColor: '#e94f37',
     },
-    signInButton: {
-        backgroundColor: '#e94f37',
-        width: wp(85),
-        height: hp(6),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: hp(4),
-        borderRadius: wp(1),
-    },
     signUpButton: {
         backgroundColor: '#e94f37',
         width: wp(80),
@@ -466,20 +455,11 @@ const signInStyles = StyleSheet.create({
         marginTop: hp(3),
         marginBottom: hp(5)
     },
-    signInButtonText: {
-        fontWeight: 'bold',
-        color: "#fffffa",
-        fontSize: wp(6)
-    },
-    background: {
-        alignItems: 'center'
-    },
     signInContainer: {
         marginLeft: wp(5),
         width: wp(80),
     },
     signUpContainer: {
-        marginLeft: wp(5),
         width: wp(80),
         height: hp(40)
     },

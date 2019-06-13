@@ -1,5 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Button, ToastAndroid} from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableWithoutFeedback,
+    Button,
+    ToastAndroid,
+    TouchableOpacity
+} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
@@ -31,30 +40,15 @@ export default class CreateListingScreen extends React.Component {
               <Inputs callback={this.updatePostState.bind(this)}/>
               <ImageUpload callback={this.updatePostState.bind(this)}/>
 
-              <TouchableWithoutFeedback onPress={ () => this.refs.confirmModal.open()}>
-                  <View style={styles.submitBtn}>
-                      <Text style={styles.submitText}>Submit</Text>
-                  </View>
-              </TouchableWithoutFeedback>
-
-              <Modal style={styles.confirmModal} position={'bottom'} ref={"confirmModal"}>
-                  <Text style={styles.confirmModalText}>Are you sure that you would like to submit this post?</Text>
-
-                  <View style={styles.modalButtonContainer}>
-                      <View style={styles.modalButtonSubmitContainer}>
-                          <View style={styles.modalButtonSubmit} />
+              <View style={{alignItems: 'center'}}>
+                  <TouchableOpacity onPress={() => this.submitListing()}>
+                      <View style={[mainStyles.button, {marginTop: hp(3)}]}>
+                          <Text style={mainStyles.buttonText}>Submit Listing</Text>
                       </View>
-                      <View style={styles.modalButtonBackContainer}>
-                          <View style={styles.modalButtonBack}/>
-                      </View>
-                  </View>
-              </Modal>
+                  </TouchableOpacity>
+              </View>
           </View>
         );
-    }
-
-    test(){
-        console.log("beep");
     }
 
     updatePostState(key, value){
@@ -88,6 +82,7 @@ export default class CreateListingScreen extends React.Component {
             imageUUID: this.state.imageUUID
         }).then(() => {
             ToastAndroid.show("Successfully uploaded post!", ToastAndroid.SHORT);
+            this.navigation.navigate('ViewListing')
         });
     }
 }
@@ -96,8 +91,11 @@ export default class CreateListingScreen extends React.Component {
 class Header extends React.Component {
     render() {
         return (
-            <View style={mainStyles.headerContainer}>
+            <View>
                 <Text style={mainStyles.headerTitle}>Create Listing</Text>
+                <View style={{alignItems: 'center'}}>
+                    <Text style={mainStyles.headerSubTitle}>Enter the info and upload an image of the textbooks to create a listing.</Text>
+                </View>
             </View>
         );
     }
@@ -367,6 +365,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginTop: hp(5),
-        marginLeft: wp(5)
+        marginLeft: wp(5),
+        alignItems: 'flex-start'
     },
 });

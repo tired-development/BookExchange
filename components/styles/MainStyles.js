@@ -9,22 +9,32 @@ export const mainStyles = StyleSheet.create({
         backgroundColor: '#333138',
     },
     headerContainer: {
-        backgroundColor: '#E94F37',
-        width: wp(100),
-        height: hp(20)
+        alignItems:'center'
     },
     headerTitle: {
-        fontSize: wp(15),
-        marginTop: hp(5),
-        fontWeight: "bold",
-        color: "#FFFFFA",
+        fontSize: wp(11),
+        color: '#FFFFFA',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: hp(7)
     },
     headerSubTitle: {
-        fontSize: wp(5),
-        fontWeight: "bold",
-        width: wp(80),
-        marginTop: hp(2),
-        marginLeft: wp(5),
-        color: "#F7F7F7"
+        fontSize: wp(4),
+        color: '#FFFFFA',
+        textAlign: 'center',
+        width: wp(75)
+    },
+    button: {
+        backgroundColor: '#e94f37',
+        width: wp(85),
+        height: hp(6),
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: wp(1),
+    },
+    buttonText: {
+        fontWeight: 'bold',
+        color: "#fffffa",
+        fontSize: wp(6)
     }
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateListingScreen from './components/CreateListing'
+import ViewListingScreen from './components/ViewListings.js'
 import {StyleSheet, TouchableWithoutFeedback, Text, Image, View} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import {createAppContainer, createStackNavigator} from "react-navigation";
@@ -17,9 +18,10 @@ export default class App extends React.Component {
 
 const AppNavigator = createStackNavigator(
     {
-      Home: HomeScreen,
-      Login: LoginScreen,
-      CreateListing: CreateListingScreen
+        Home: HomeScreen,
+        Login: LoginScreen,
+        CreateListing: CreateListingScreen,
+        ViewListing: ViewListingScreen,
     },
     {
       initialRouteName: "Home",
