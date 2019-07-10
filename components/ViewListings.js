@@ -50,12 +50,12 @@ class Listings extends React.Component{
                         <Text style={mainStyles.buttonText}>Create Listing</Text>
                     </View>
                 </TouchableOpacity>
-                <ScrollView>
+                <View style={{marginTop: hp(5)}}/>
                 <FlatList
                     data= {this.state.postData}
                     renderItem = { ({ item }) => (this.renderListing(item.title, item.description, item.price, item.imageUUID))}
                     keyExtractor={(item,index) => item.title}/>
-                </ScrollView>
+                <View style={{marginTop: hp(5)}}></View>
             </View>
         );
     }
@@ -99,7 +99,7 @@ const styles = {
         alignItems: 'center',
         borderRadius: wp(1),
         width: wp(90),
-        marginTop: hp(4)
+        marginBottom: hp(5)
     },
     postTitle: {
         color: '#FFFFFA',
