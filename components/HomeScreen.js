@@ -303,12 +303,12 @@ class SignIn extends React.Component {
 
     signIn(){
 
-       /* if(this.state.signInEmail==='' || this.state.signInPassword===''){
+        if(this.state.signInEmail==='' || this.state.signInPassword===''){
             ToastAndroid.show("Your email and password are invalid.", ToastAndroid.SHORT);
             return;
-        }*/
+        }
        //todo: change back
-        firebase.auth().signInWithEmailAndPassword(/*this.state.signInEmail*/"lampentimothy42@gmail.com", /*this.state.signInPassword*/"pancakes123").then(() => {
+        firebase.auth().signInWithEmailAndPassword(this.state.signInEmail, this.state.signInPassword).then(() => {
             //navigate to new screen
             ToastAndroid.show("You have been signed in.", ToastAndroid.SHORT);
             this.props.navigation.navigate("ViewListing");
