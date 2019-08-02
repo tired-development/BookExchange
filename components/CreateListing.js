@@ -73,13 +73,16 @@ export default class CreateListingScreen extends React.Component {
             console.log("This price sucks!");
             return;
         }
+
+        let uid = await firebase.auth().currentUser.uid;
 //
         const postUUID = uuidv4();
         await firebase.database().ref("posts/"+ postUUID).set({
             title: this.state.title,
             description: this.state.description,
             price: this.state.price,
-            imageUUID: this.state.imageUUID
+            imageUUID: this.state.imageUUID,
+            ownerUID: uid
         }).then(() => {
             ToastAndroid.show("Successfully uploaded post!", ToastAndroid.SHORT);
             this.navigation.navigate('ViewListing')
@@ -223,7 +226,11 @@ class ImageUpload extends React.Component {
     }
 
     async chooseImage() {
-        let result = await ImagePicker.launchImageLibraryAsync();
+        let result = await ImagePicker.launchImageLibraryAsync(({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [3.14, 2],
+        }));
         if (result.cancelled) {
             return;
         }

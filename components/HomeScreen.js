@@ -293,26 +293,25 @@ class SignIn extends React.Component {
                 this.setState({modalSignUpVisible: false});
             });
             firebase.database().ref("users/" + user.uid).set({
-               firstName: this.state.signUpFirstName,
-               lastName: this.state.signUpLastName,
-               phone: this.state.signUpPhone,
+                firstName: this.state.signUpFirstName,
+                lastName: this.state.signUpLastName,
+                phone: this.state.signUpPhone,
+                email: this.state.signUpEmail
             }).then();
         });
     }
 
     signIn(){
 
-        this.props.navigation.navigate("ViewListing");
-        return;//TODO: remove when done testing
-
-        if(this.state.signInEmail==='' || this.state.signInPassword===''){
+       /* if(this.state.signInEmail==='' || this.state.signInPassword===''){
             ToastAndroid.show("Your email and password are invalid.", ToastAndroid.SHORT);
             return;
-        }
-        firebase.auth().signInWithEmailAndPassword(this.state.signInEmail, this.state.signInPassword).then(() => {
+        }*/
+       //todo: change back
+        firebase.auth().signInWithEmailAndPassword(/*this.state.signInEmail*/"lampentimothy42@gmail.com", /*this.state.signInPassword*/"pancakes123").then(() => {
             //navigate to new screen
             ToastAndroid.show("You have been signed in.", ToastAndroid.SHORT);
-            this.props.navigation.navigate("CreateListing");
+            this.props.navigation.navigate("ViewListing");
         }).catch((error) => {
             console.log(error.code);
             switch(error.code){
