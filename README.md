@@ -16,6 +16,8 @@ This is a marketplace application for students to list their used textbooks for 
 
 [Expo](https://expo.io/) - Live refresh feature that allows for a streamlined development.
 
+[React Navigation](https://github.com/react-navigation/react-navigation) - Navigation library used to link the different pages of the application.
+
 # Author
 Timothy Lampen
 
