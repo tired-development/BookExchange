@@ -1,4 +1,4 @@
-# BookExchange
+# TradeIt!
 IOS / Android application created in React Native.
 
 
